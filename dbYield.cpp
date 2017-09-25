@@ -111,6 +111,6 @@ int main()
 
   writer.join();
   reader.join();
-  std::cout<<"\nd"
+  std::cout<<"done\n";
   return 0;
 }
