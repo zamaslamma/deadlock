@@ -36,7 +36,7 @@ class PeopleDB
     unsigned int addPerson(Person p)
     {
       Wlock lock(mtx); // Hold a write lock until this function exits
-	  //this_thread::yield();
+	  this_thread::yield();
 
       SSNs.push_back(p.SSN);
       SSN_to_Person[p.SSN] = p;
@@ -49,7 +49,7 @@ class PeopleDB
      */
     Person getPersonBySSN(string ssn)
     {
-      Rlock lock(mtx); // Hold a read lock until this function exits
+    //  Rlock lock(mtx); // Hold a read lock until this function exits
 	  //this_thread::yield();
 
       // Look through the database and see if the person is present
@@ -70,7 +70,7 @@ class PeopleDB
     Person getPersonByID(unsigned int id)
     {
       Rlock lock(mtx); // Hold a read lock until this function exits
-	  //this_thread::yield();
+	  this_thread::yield();
 
       if(id >= SSNs.size())
       {
