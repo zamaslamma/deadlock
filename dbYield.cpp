@@ -24,7 +24,7 @@ struct Person
 class PeopleDB
 {
   private:
-    RWmutex mtx;
+    RWmutex mtx1, mtx2;
     vector<string> SSNs; /* Databse ID -> SSN */
     map<string,Person> SSN_to_Person; /* SSN -> Person object */
 
@@ -35,7 +35,7 @@ class PeopleDB
      */
     unsigned int addPerson(Person p)
     {
-      Wlock lock(mtx); // Hold a write lock until this function exits
+      Wlock lock(mtx1); // Hold a write lock until this function exits
 	  this_thread::yield();
 
       SSNs.push_back(p.SSN);
@@ -49,7 +49,7 @@ class PeopleDB
      */
     Person getPersonBySSN(string ssn)
     {
-      Rlock lock(mtx); // Hold a read lock until this function exits
+      Rlock lock(mtx2); // Hold a read lock until this function exits
 	  this_thread::yield();
 
       // Look through the database and see if the person is present
@@ -70,7 +70,7 @@ class PeopleDB
      */
     Person getPersonByID(unsigned int id)
     {
-      Rlock lock(mtx); // Hold a read lock until this function exits
+      Rlock lock(mtx2); // Hold a read lock until this function exits
 	  this_thread::yield();
 
       if(id >= SSNs.size())
@@ -111,6 +111,7 @@ int main()
   thread reader(get_one, &db); // Repeatedly read from the database
 
   writer.join();
+
   reader.join();
 
   return 0;
